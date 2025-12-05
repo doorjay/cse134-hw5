@@ -5,12 +5,13 @@ const form_errors = [];
 const PROJECT_CARDS_DATA = [
     {
         id: 'example-1',
-        title: 'Example Project 1',
-        imageSmall: 'images/project1-small.jpg',
-        imageLarge: 'images/project1.jpg',
+        title: 'Let Me Cook',
+        imageSmall: 'images/LetMeCook.png',
+        imageLarge: 'images/LetMeCook.png',
         imageAlt: 'A photo of project 1',
-        description: 'A responsive website built with HTML, CSS, and JavaScript that showcases my résumé and personal projects.',
-        tags: ['HTML', 'CSS', 'JavaScript']
+        description: 'Let Me Cook is a recipe card website I built with some friends in early 2025. It allows users to save their favorite recipes by storing them locally on the website. I did much of the design for each of the pages including the figma mock ups as well as the HTML and CSS implimentations. It is one of the first coding projects I got to do with a larger group. There were 11 of us working together on the project so it also gave me the opportunity to learn the intricacies communicating effectively and planning with a team. If you\'d like to learn more about this project, please click the link below and visit my GitHub page which explains more in-depth how the website works as well as a live deployment.',
+        tags: ['HTML', 'CSS', 'JavaScript'],
+        link: 'https://github.com/doorjay/LMC2'
     },
     {
         id: 'example-2',
@@ -19,7 +20,8 @@ const PROJECT_CARDS_DATA = [
         imageLarge: 'images/project2.jpg',
         imageAlt: 'A photo of project 2',
         description: 'A sample project with a short description to demonstrate reusable cards.',
-        tags: ['Tag 1', 'Tag 2', 'Tag 3']
+        tags: ['Tag 1', 'Tag 2', 'Tag 3'],
+        link: 'projects.html'
     },
     {
         id: 'example-3',
@@ -28,7 +30,8 @@ const PROJECT_CARDS_DATA = [
         imageLarge: 'images/project3.jpg',
         imageAlt: 'A photo of project 3',
         description: 'Another example project that highlights my work on layouts and design.',
-        tags: ['Layout', 'Design', 'Practice']
+        tags: ['Layout', 'Design', 'Practice'], 
+        link: ''
     }
 ];
 
@@ -303,7 +306,8 @@ class ProjectCard extends HTMLElement
             imageLarge,
             imageAlt,
             description,
-            tags
+            tags,
+            link
         } = this._data;
 
         // <article class="project-card">
@@ -360,13 +364,25 @@ class ProjectCard extends HTMLElement
             bodySection.appendChild(paragraph);
         }
 
-        // “Learn more” link – for now just uses a placeholder
-        const link = document.createElement('a');
-        link.href = '#';
-        link.target = '_blank';
-        link.rel = 'noopener';
-        link.textContent = 'Learn more';
-        bodySection.appendChild(link);
+        // “Learn more” link 
+        if (typeof link === 'string' && link.trim() !== '')
+        {
+            const anchor = document.createElement('a');
+            anchor.href = link;
+
+            // External links → new tab, internal → same tab
+            const trimmed = link.trim();
+            const isExternal = trimmed.startsWith('http://') || trimmed.startsWith('https://');
+
+            if (isExternal)
+            {
+                anchor.target = '_blank';
+                anchor.rel = 'noopener';
+            }
+
+            anchor.textContent = 'Learn more';
+            bodySection.appendChild(anchor);
+        }
 
         // Tags list if provided
         if (Array.isArray(tags) && tags.length > 0)
