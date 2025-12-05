@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact (No JS)</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <nav> 
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html">Play</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="form-with-js.html">With JS</a></li>
+                <li><a href="form-no-js.html" class="active">No JS</a></li>
+                <li>
+                    <input type="checkbox" id="theme-toggle" aria-label="Toggle dark mode">
+                    <label for="theme-toggle"></label>
+                </li>
+            </ul>
+        </nav>
+    </header> 
+
+    <main>
+        <section id="intro">
+            <h1>Contact me.</h1>
+            <p><em>No JavaScript version</em></p>
+        </section>
+
+        <fieldset>
+            <legend>Contact Form</legend>
+
+            <form action="https://httpbin.org/post" method="POST">
+
+                <input type="hidden" name="possible_bot" value="true">
+
+                <label for="name">Name:</label> <br>
+                <input 
+                    id="name" 
+                    name="name" 
+                    type="text" 
+                    required 
+                    minlength="2" 
+                    maxlength="40"
+                > <br>
+
+                <label for="email">Email:</label> <br>
+                <input 
+                    id="email" 
+                    name="email" 
+                    type="email" 
+                    required 
+                > <br>
+
+                <label for="message">Message:</label> <br>
+                <textarea 
+                    id="message" 
+                    name="message" 
+                    required 
+                    minlength="1" 
+                    maxlength="500"
+                ></textarea> <br>
+
+                <button type="submit">Send</button>
+
+                <output id="error-output"></output>
+                <output id="info-output"></output>
+
+            </form>
+        </fieldset>
+    </main>
+
+    <footer>
+        <p>© 2025 Dorjé Pradhan. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

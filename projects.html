@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Project portfolio and resume of Dorjé Pradhan">
+
+    <title>Portfolio | Dorjé Pradhan</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body> 
+    <header>
+        <nav> 
+            <ul>
+                <li><a href="index.html" data-view-transition>Home</a></li>
+                <li><a href="projects.html" class="active" data-view-transition>Play</a></li>
+                <li><a href="contact.html" data-view-transition>Contact</a></li>
+                <li><a href="form-with-js.html" data-view-transition>With JS</a></li>
+                <li><a href="form-no-js.html" >No JS</a></li>
+                <li>
+                    <input type="checkbox" id="theme-toggle" aria-label="Toggle dark mode">
+                    <label for="theme-toggle"></label>
+                </li>
+            </ul>
+        </nav>
+    </header> 
+
+    <main> 
+        <noscript>
+            <p>
+                <strong>Note:</strong> The theme switch will not persist 
+                between pages or vists when JavaScript is off.
+            </p>
+        </noscript>
+        <section id="intro">
+            <h1>Play.</h1>
+            <p><i>A small collection of projects I've worked on for fun or for school.</i></p>
+            <noscript>
+                <p><strong>Note:</strong> Some interative elements may not display without JavaScript enabled.</p>
+            </noscript>
+        </section>
+
+        <section id="project-list">
+            <h1>Projects</h1>
+            <article>
+                <picture>
+                    <source
+                        srcset="
+                            images/project1-small.jpg 480w,
+                            images/project1.jpg 800w"
+                        sizes="(min-width: 700px) 90vw, 200px"
+                        type="image/jpeg"
+                    >
+
+                    <img
+                        src="images/project1-small.jpg"
+                        alt="A photo of project 1"
+                        loading="lazy"
+                        decoding="async"
+                    >
+                </picture>
+                <h2>Example Project 1</h2>
+                <p>
+                    A <strong>responsive</strong> website built with <em>HTML</em>,
+                    <em>CSS</em>, and <em>JavaScript</em>. It showcases my résumé 
+                    and personal projects.
+        
+                </p>
+                <ul>
+                    <li>Tag 1</li>
+                    <li>Tag 2</li>
+                    <li>Tag 3</li>
+                </ul>
+            </article>
+
+            <hr>
+
+            <article>
+                <picture>
+                    <source
+                        srcset="
+                            images/project2-small.jpg 480w,
+                            images/project2.jpg 800w"
+                        sizes="(min-width: 700px) 90vw, 200px"
+                        type="image/jpeg"
+                    >
+                    <img
+                        src="images/project2-small.jpg"
+                        alt="A photo of project 2"
+                        loading="lazy"
+                        decoding="async"
+                    >
+                </picture>
+                <h2>Example Project 2</h2>
+                <p>
+                    An example description of my second project that will go here.
+                </p>
+                <ul>
+                    <li>Tag 1</li>
+                    <li>Tag 2</li>
+                    <li>Tag 3</li>
+                </ul>
+            </article>
+
+            <hr>
+
+            <article>
+                <picture>
+                    <source
+                        srcset="
+                            images/project3-small.jpg 480w,
+                            images/project3.jpg 800w"
+                        sizes="(min-width: 700px) 90vw, 200px"
+                        type="image/jpeg"
+                    >
+                    <img
+                        src="images/project3-small.jpg"
+                        alt="A photo of project 3"
+                        loading="lazy"
+                        decoding="async"
+                    >
+                </picture>
+                <h2>Example Project 3</h2>
+                <p>
+                    An example description of my third project that will go here.
+                </p>
+                <ul>
+                    <li>Tag 1</li>
+                    <li>Tag 2</li>
+                    <li>Tag 3</li>
+                </ul>
+            </article>
+
+            <hr>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2025 Dorjé Pradhan. All rights reserved.</p>
+    </footer>
+
+</body>
+
+</html>

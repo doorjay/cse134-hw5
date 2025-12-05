@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Just some experiments">
+
+    <title>Portfolio | Dorjé Pradhan</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+
+    <style>
+        custom-box {
+            border: 2px solid black;
+            display: block;
+            padding: 8px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body> 
+    <header>
+        <nav> 
+            <ul>
+                <li><a href="index.html" data-view-transition>Home</a></li>
+                <li><a href="projects.html" data-view-transition>Play</a></li>
+                <li><a href="contact.html" class="active" data-view-transition>Contact</a></li>
+                <li><a href="form-with-js.html" data-view-transition>With JS</a></li>
+                <li><a href="form-no-js.html">No JS</a></li>
+                <li>
+                    <input type="checkbox" id="theme-toggle" aria-label="Toggle dark mode">
+                    <label for="theme-toggle"></label>
+                </li>
+            </ul>
+        </nav>
+    </header> 
+
+    <main>
+
+        <noscript>
+            <p>
+                <strong>Note:</strong> The theme switch will not persist 
+                between pages or vists when JavaScript is off.
+            </p>
+        </noscript>
+        <section id="intro">
+            <h1>Reach out.</h1>
+            <p><em>I'd love to hear from you!</em></p>
+        </section>
+        
+        <fieldset>
+            <legend>Contact Me</legend>
+            <form>
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" name="name" required> <br>
+
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email" required> <br>
+
+                <label for="message">Message:</label><br>
+                <textarea id="message" name="message" required></textarea> <br>
+
+                <button type="submit">Send</button>
+            </form>
+        </fieldset>
+
+    </main>
+
+    <footer>
+        <p>© 2025 Dorjé Pradhan. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
