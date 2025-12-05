@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupThemeToggle();
     setupViewTransions();
     setupContactFormJS();
+    setupProjectsPage();
 }); 
 
 // Contact Form Validation
@@ -395,7 +396,27 @@ class ProjectCard extends HTMLElement
 // Register <project-card>
 customElements.define('project-card', ProjectCard);
 
+function setupProjectsPage() 
+{
+    const cardsSection = document.querySelector('#project-cards');
 
+    // not on projects page
+    if (!cardsSection)
+    {
+        return;
+    }
+
+    // Clear any existing content 
+    cardsSection.textContent = '';
+
+    // Create a <project-card> for each project in our data array
+    PROJECT_CARDS_DATA.forEach((project) => 
+    {
+        const cardElement = document.createElement('project-card');
+        cardElement.data = project;
+        cardsSection.appendChild(cardElement);
+    });
+}
 
 
 function setupViewTransions() {
@@ -458,6 +479,7 @@ function setupViewTransions() {
 
             // Re-initialize JS behaviors for the new content
             setupContactFormJS();
+            setupProjectsPage();
         });
     });
 
