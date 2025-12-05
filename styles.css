@@ -251,31 +251,70 @@ main {
     }
 
     #project-list {
-        article {
-        display: grid;
-        grid-template-columns: 200px 1fr;
-        align-items: start;
-        gap: 1.5rem;
 
-        picture, img {
-            width: 100%;
-            max-width: 200px;        
-            border-radius: 1rem;
-            object-fit: cover;
-            object-position: center;
+        #project-cards {
+            display: grid;
+            gap: 1.5rem;
         }
 
-        @media (max-width: 700px) {
-            grid-template-columns: 1fr; 
-            text-align: center;
+        project-card > article.project-card {
+            /* Use CSS variables for styling the card */
+            --card-radius: 1.5rem;
+            --card-bg: rgba(255, 255, 255, 0.4);
 
-            picture, img {
-                max-width: 100%;
-                margin-inline: auto;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            align-items: start;
+            gap: 1.5rem;
+
+            background: var(--card-bg);
+            border-radius: var(--card-radius);
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow);
+
+            picture,
+            img {
+                width: 100%;
+                max-width: 200px;
+                border-radius: 1rem;
+                object-fit: cover;
+                object-position: center;
+            }
+
+            .card-body {
+                display: grid;
+                gap: 0.6rem;
+            }
+
+            .tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.4rem;
+                list-style: none;
+                padding: 0;
+                margin: 0.4rem 0 0 0;
+
+                li {
+                    padding: 0.2em 0.6em;
+                    border-radius: 999px;
+                    font-size: 0.8rem;
+                    background: color-mix(in oklab, var(--lavender), white 40%);
+                }
+            }
+
+            @media (max-width: 700px) {
+                grid-template-columns: 1fr;
+                text-align: center;
+
+                picture,
+                img {
+                    max-width: 100%;
+                    margin-inline: auto;
+                }
             }
         }
     }
-    }
+
 
     hr {
         display: none;
