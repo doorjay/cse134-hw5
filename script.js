@@ -1,6 +1,38 @@
 // global array to track all errors across attempts
 const form_errors = []; 
 
+// Project data 
+const PROJECT_CARDS_DATA = [
+    {
+        id: 'example-1',
+        title: 'Example Project 1',
+        imageSmall: 'images/project1-small.jpg',
+        imageLarge: 'images/project1.jpg',
+        imageAlt: 'A photo of project 1',
+        description: 'A responsive website built with HTML, CSS, and JavaScript that showcases my résumé and personal projects.',
+        tags: ['HTML', 'CSS', 'JavaScript']
+    },
+    {
+        id: 'example-2',
+        title: 'Example Project 2',
+        imageSmall: 'images/project2-small.jpg',
+        imageLarge: 'images/project2.jpg',
+        imageAlt: 'A photo of project 2',
+        description: 'A sample project with a short description to demonstrate reusable cards.',
+        tags: ['Tag 1', 'Tag 2', 'Tag 3']
+    },
+    {
+        id: 'example-3',
+        title: 'Example Project 3',
+        imageSmall: 'images/project3-small.jpg',
+        imageLarge: 'images/project3.jpg',
+        imageAlt: 'A photo of project 3',
+        description: 'Another example project that highlights my work on layouts and design.',
+        tags: ['Layout', 'Design', 'Practice']
+    }
+];
+
+
 document.addEventListener('DOMContentLoaded', () => {
     setupThemeToggle();
     setupViewTransions();
@@ -207,6 +239,164 @@ function setupThemeToggle() {
         localStorage.setItem('preferred-theme', theme);
     });
 }
+
+// Custom element for a single project card
+class ProjectCard extends HTMLElement
+{
+    constructor()
+    {
+        super();
+        this._data = null;
+    }
+
+    // Allow setting data via JS: card.data = {...}
+    set data(value)
+    {
+        this._data = value;
+        this.render();
+    }
+
+    get data()
+    {
+        return this._data;
+    }
+
+    connectedCallback()
+    {
+        // If data was not set programmatically, allow light attribute usage
+        if (!this._data)
+        {
+            const title = this.getAttribute('title');
+
+            if (title)
+            {
+                this._data = {
+                    id: this.getAttribute('id') || '',
+                    title: title,
+                    imageSmall: this.getAttribute('image-small') || '',
+                    imageLarge: this.getAttribute('image-large') || '',
+                    imageAlt: this.getAttribute('image-alt') || '',
+                    description: this.textContent.trim(),
+                    tags: []
+                };
+            }
+        }
+
+        this.render();
+    }
+
+    // Build the card
+    render()
+    {
+        if (!this._data)
+        {
+            return;
+        }
+
+        // Clear existing children
+        this.textContent = '';
+
+        const {
+            title,
+            imageSmall,
+            imageLarge,
+            imageAlt,
+            description,
+            tags
+        } = this._data;
+
+        // <article class="project-card">
+        const article = document.createElement('article');
+        article.classList.add('project-card');
+
+        // <picture> with <source> and <img>
+        const picture = document.createElement('picture');
+
+        if (imageSmall || imageLarge)
+        {
+            const source = document.createElement('source');
+            const srcsetParts = [];
+
+            if (imageSmall)
+            {
+                srcsetParts.push(`${imageSmall} 480w`);
+            }
+
+            if (imageLarge)
+            {
+                srcsetParts.push(`${imageLarge} 800w`);
+            }
+
+            if (srcsetParts.length > 0)
+            {
+                source.setAttribute('srcset', srcsetParts.join(', '));
+                source.setAttribute('sizes', '(min-width: 700px) 90vw, 200px');
+                source.setAttribute('type', 'image/jpeg');
+                picture.appendChild(source);
+            }
+
+            const img = document.createElement('img');
+            img.src = imageSmall || imageLarge || '';
+            img.alt = imageAlt || '';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+
+            picture.appendChild(img);
+        }
+
+        // Text content section 
+        const bodySection = document.createElement('section');
+        bodySection.classList.add('card-body');
+
+        const heading = document.createElement('h2');
+        heading.textContent = title;
+        bodySection.appendChild(heading);
+
+        if (description)
+        {
+            const paragraph = document.createElement('p');
+            paragraph.textContent = description;
+            bodySection.appendChild(paragraph);
+        }
+
+        // “Learn more” link – for now just uses a placeholder
+        const link = document.createElement('a');
+        link.href = '#';
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.textContent = 'Learn more';
+        bodySection.appendChild(link);
+
+        // Tags list if provided
+        if (Array.isArray(tags) && tags.length > 0)
+        {
+            const tagList = document.createElement('ul');
+            tagList.classList.add('tags');
+
+            tags.forEach((tagText) =>
+            {
+                const li = document.createElement('li');
+                li.textContent = tagText;
+                tagList.appendChild(li);
+            });
+
+            bodySection.appendChild(tagList);
+        }
+
+        // Put everything together in the article
+        article.appendChild(picture);
+        article.appendChild(bodySection);
+
+        // Attach article to the custom element
+        this.appendChild(article);
+    }
+}
+
+// Register <project-card>
+customElements.define('project-card', ProjectCard);
+
+
+
 
 function setupViewTransions() {
     // No API? Don't try to transition stuff
