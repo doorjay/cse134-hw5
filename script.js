@@ -1,6 +1,15 @@
 // global array to track all errors across attempts
 const form_errors = []; 
 
+// Key used to store project data in localStorage
+const LOCAL_PROJECTS_KEY = 'portfolio-projects';
+
+// remote JSON endpoint
+const REMOTE_PROJECTS_URL = 'https://api.jsonbin.io/v3/b/6932672aae596e708f84a5d8';
+
+const JSONBIN_API_KEY = '$2a$10$lT2qyJJb10RpAyr4zcn90ehI9at3LPo3DJOlMwcu4xWidQUXRQRgy';
+
+
 // Project data 
 const PROJECT_CARDS_DATA = [
     {
@@ -412,6 +421,32 @@ class ProjectCard extends HTMLElement
 // Register <project-card>
 customElements.define('project-card', ProjectCard);
 
+// Render an array of project objects into <project-card> elements
+function renderProjectCards(projects)
+{
+    const cardsSection = document.querySelector('#project-cards');
+
+    if (!cardsSection)
+    {
+        return;
+    }
+
+    // Clear existing children without innerHTML
+    while (cardsSection.firstChild)
+    {
+        cardsSection.removeChild(cardsSection.firstChild);
+    }
+
+    // Add one <project-card> per project
+    projects.forEach((project) =>
+    {
+        const card = document.createElement('project-card');
+        card.data = project; // uses the setter in ProjectCard
+        cardsSection.appendChild(card);
+    });
+}
+
+
 function setupProjectsPage() 
 {
     const cardsSection = document.querySelector('#project-cards');
@@ -422,16 +457,126 @@ function setupProjectsPage()
         return;
     }
 
-    // Clear any existing content 
-    cardsSection.textContent = '';
+    const loadLocalButton = document.querySelector('#load-local');
+    const loadRemoteButton = document.querySelector('#load-remote');
 
-    // Create a <project-card> for each project in our data array
-    PROJECT_CARDS_DATA.forEach((project) => 
+    // Seed localStorage once with the default data if empty
+    if (!localStorage.getItem(LOCAL_PROJECTS_KEY))
     {
-        const cardElement = document.createElement('project-card');
-        cardElement.data = project;
-        cardsSection.appendChild(cardElement);
-    });
+        try
+        {
+            localStorage.setItem(LOCAL_PROJECTS_KEY, JSON.stringify(PROJECT_CARDS_DATA));
+        }
+        catch (error)
+        {
+            console.error('Error seeding localStorage:', error);
+        }
+    }
+
+    // Helper to load from localStorage and render
+    function handleLoadLocal()
+    {
+        const stored = localStorage.getItem(LOCAL_PROJECTS_KEY);
+
+        if (!stored)
+        {
+            // If somehow missing, fall back to default data
+            renderProjectCards(PROJECT_CARDS_DATA);
+            return;
+        }
+
+        try
+        {
+            const projects = JSON.parse(stored);
+            if (Array.isArray(projects))
+            {
+                renderProjectCards(projects);
+            }
+            else
+            {
+                console.warn('Local projects data is not an array, using defaults.');
+                renderProjectCards(PROJECT_CARDS_DATA);
+            }
+        }
+        catch (error)
+        {
+            console.error('Error parsing local projects from storage:', error);
+            renderProjectCards(PROJECT_CARDS_DATA);
+        }
+    }
+
+    // Helper to fetch from remote endpoint and render
+        // Helper to fetch from JSONBin and render
+    async function handleLoadRemote()
+    {
+        try
+        {
+            const response = await fetch(REMOTE_PROJECTS_URL,
+            {
+                headers:
+                {
+                    'X-Master-Key': JSONBIN_API_KEY,
+                }
+            });
+
+            if (!response.ok)
+            {
+                throw new Error(`Network response was not ok: ${response.status}`);
+            }
+
+            const raw = await response.json();
+
+            // JSONBin v3 usually returns { record: <your data>, metadata: {...} }
+            // If X-Bin-Meta: 'false' is honored, raw *may* just be your data.
+            const record = raw.record ?? raw;
+
+            // Support either [ {...}, {...} ] or { projects: [ {...} ] }
+            const projects = Array.isArray(record) ? record : record.projects;
+
+            if (!Array.isArray(projects))
+            {
+                console.error('Remote data is not an array and has no "projects" array.');
+                return;
+            }
+
+            renderProjectCards(projects);
+        }
+        catch (error)
+        {
+            console.error('Error loading remote projects:', error);
+
+            const cardsSection = document.querySelector('#project-cards');
+            if (!cardsSection)
+            {
+                return;
+            }
+
+            // Clear previous content without innerHTML
+            while (cardsSection.firstChild)
+            {
+                cardsSection.removeChild(cardsSection.firstChild);
+            }
+
+            const errorParagraph = document.createElement('p');
+            errorParagraph.textContent = 'There was a problem loading remote project data.';
+            cardsSection.appendChild(errorParagraph);
+        }
+    }
+
+
+    // Attach button handlers (overwrite any previous handlers to avoid double-binding)
+    if (loadLocalButton)
+    {
+        loadLocalButton.onclick = handleLoadLocal;
+    }
+
+    if (loadRemoteButton)
+    {
+        loadRemoteButton.onclick = handleLoadRemote;
+    }
+
+    // Initial state: show local projects by default
+    handleLoadLocal();
 }
 
 
