@@ -252,6 +252,34 @@ main {
 
     #project-list {
 
+        #project-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-block: 1rem 2rem;
+
+            button {
+                background: var(--color-accent);
+                color: white;
+                border: none;
+                border-radius: 999px;
+                padding: 0.5em 1.2em;
+                font-weight: 600;
+                cursor: pointer;
+                box-shadow: var(--shadow);
+                transition:
+                    transform var(--transition),
+                    box-shadow var(--transition),
+                    background var(--transition);
+            }
+
+            button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+                background: color-mix(in oklab, var(--color-accent), white 15%);
+            }
+        }
+
         #project-cards {
             display: grid;
             gap: 1.5rem;
