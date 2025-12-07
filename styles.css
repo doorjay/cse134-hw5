@@ -343,6 +343,73 @@ main {
         }
     }
 
+    #project-crud-form
+    {
+        max-width: 48rem;
+        margin-inline: auto;
+        display: grid;
+        gap: 1.5rem;
+
+        section
+        {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            padding: 1rem 1.2rem;
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: var(--shadow);
+        }
+
+        label
+        {
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+
+        button
+        {
+            justify-self: flex-start;
+            padding: 1rem 2rem;
+        }
+
+        input::placeholder
+        {
+            color: var(--color-accent);
+        }
+
+        &.delete-mode
+        {
+            section
+            {
+                background: rgba(172, 4, 38, 0.322);
+                color: black;
+            }
+
+            #project-fields
+            {
+                /* Visually and interactively "turn off" all non-id fields */
+                input:not(#project-id),
+                textarea:not(#project-id),
+                label:not(#id-label),
+                br
+                {
+                    display: none;
+                }
+            }
+        }
+
+    }
+
+    #crud-message
+    {
+        min-height: 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 0.3rem 0.6rem;
+    }
+
+
 
     hr {
         display: none;

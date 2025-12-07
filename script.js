@@ -684,6 +684,39 @@ function setupCrudPage()
             .filter(Boolean);
     }
 
+    // Keep visual state in sync with the selected action
+    function updateCrudMode()
+    {
+        const action = getCurrentAction();
+
+        if (action === 'delete')
+        {
+            form.classList.add('delete-mode');
+            // Optional helper text, similar to contact form messaging
+            showMessage('Delete a project.');
+        }
+        else
+        {
+            form.classList.remove('delete-mode');
+
+            // Only clear the helper if we're not overwriting a more specific message
+            if (messageOutput && messageOutput.textContent.startsWith('Delete'))
+            {
+                messageOutput.textContent = '';
+            }
+        }
+    }
+
+    // Respond when the user switches between Create / Update / Delete
+    actionRadios.forEach((radio) =>
+    {
+        radio.addEventListener('change', updateCrudMode);
+    });
+
+    // Initialize once on page load
+    updateCrudMode();
+
+
     form.addEventListener('submit', (event) =>
     {
         event.preventDefault();
