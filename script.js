@@ -7,6 +7,7 @@ const LOCAL_PROJECTS_KEY = 'portfolio-projects';
 // remote JSON endpoint
 const REMOTE_PROJECTS_URL = 'https://api.jsonbin.io/v3/b/6932672aae596e708f84a5d8';
 
+// REMOVE AFTER FALL QUARTER IS FINISHED
 const JSONBIN_API_KEY = '$2a$10$lT2qyJJb10RpAyr4zcn90ehI9at3LPo3DJOlMwcu4xWidQUXRQRgy';
 
 
@@ -46,7 +47,7 @@ const PROJECT_CARDS_DATA = [
 
 
 // Helper to get current projects from localStorage, falling back to defaults
-function getLocalProject()
+function getLocalProjects()
 {
     const stored = localStorage.getItem(LOCAL_PROJECTS_KEY);
 
@@ -99,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupViewTransions();
     setupContactFormJS();
     setupProjectsPage();
+    setupCrudPage();
 }); 
 
 // Contact Form Validation
@@ -629,6 +631,187 @@ function setupProjectsPage()
 }
 
 
+function setupCrudPage()
+{
+    const form = document.querySelector('#project-crud-form');
+    if (!form)
+    {
+        // Not on the CRUD page
+        return;
+    }
+
+    const actionRadios = form.querySelectorAll('input[name="crud-action"]');
+    const idField = form.querySelector('#project-id');
+    const titleField = form.querySelector('#project-title');
+    const descriptionField = form.querySelector('#project-description');
+    const imageSmallField = form.querySelector('#project-image-small');
+    const imageLargeField = form.querySelector('#project-image-large');
+    const imageAltField = form.querySelector('#project-image-alt');
+    const linkField = form.querySelector('#project-link');
+    const tagsField = form.querySelector('#project-tags');
+    const messageOutput = document.querySelector('#crud-message');
+
+    if (!idField || actionRadios.length === 0)
+    {
+        return;
+    }
+
+    function getCurrentAction()
+    {
+        const checked = form.querySelector('input[name="crud-action"]:checked');
+        return checked ? checked.value : 'create';
+    }
+
+    function showMessage(text)
+    {
+        if (!messageOutput)
+        {
+            return;
+        }
+        messageOutput.textContent = text;
+    }
+
+    function parseTags(text)
+    {
+        if (!text)
+        {
+            return [];
+        }
+
+        return text
+            .split(',')
+            .map((tag) => tag.trim())
+            .filter(Boolean);
+    }
+
+    form.addEventListener('submit', (event) =>
+    {
+        event.preventDefault();
+
+        const action = getCurrentAction();
+        const id = idField.value.trim();
+
+        if (!id)
+        {
+            showMessage('Please enter a project id.');
+            return;
+        }
+
+        const projects = getLocalProjects();
+
+        if (action === 'create')
+        {
+            const exists = projects.some((project) => project.id === id);
+            if (exists)
+            {
+                showMessage('A project with that id already exists. Try a different id or use update.');
+                return;
+            }
+
+            const newProject = {
+                id: id,
+                title: titleField.value.trim() || 'Untitled project',
+                description: descriptionField.value.trim(),
+                imageSmall: imageSmallField.value.trim(),
+                imageLarge: imageLargeField.value.trim(),
+                imageAlt: imageAltField.value.trim(),
+                link: linkField.value.trim(),
+                tags: parseTags(tagsField.value)
+            };
+
+            projects.push(newProject);
+            saveLocalProjects(projects);
+
+            form.reset();
+            // default action back to create
+            const createRadio = form.querySelector('input[name="crud-action"][value="create"]');
+            if (createRadio)
+            {
+                createRadio.checked = true;
+            }
+
+            showMessage('Project created. Visit the Play page and click "Load Local" to see it.');
+            return;
+        }
+
+        if (action === 'update')
+        {
+            const project = projects.find((p) => p.id === id);
+            if (!project)
+            {
+                showMessage('No project found with that id to update.');
+                return;
+            }
+
+            const newTitle = titleField.value.trim();
+            const newDescription = descriptionField.value.trim();
+            const newImageSmall = imageSmallField.value.trim();
+            const newImageLarge = imageLargeField.value.trim();
+            const newImageAlt = imageAltField.value.trim();
+            const newLink = linkField.value.trim();
+            const newTagsText = tagsField.value.trim();
+
+            if (newTitle)
+            {
+                project.title = newTitle;
+            }
+            if (newDescription)
+            {
+                project.description = newDescription;
+            }
+            if (newImageSmall)
+            {
+                project.imageSmall = newImageSmall;
+            }
+            if (newImageLarge)
+            {
+                project.imageLarge = newImageLarge;
+            }
+            if (newImageAlt)
+            {
+                project.imageAlt = newImageAlt;
+            }
+            if (newLink)
+            {
+                project.link = newLink;
+            }
+            if (newTagsText)
+            {
+                project.tags = parseTags(newTagsText);
+            }
+
+            saveLocalProjects(projects);
+
+            showMessage('Project updated. Visit the Play page and click "Load Local" to see the changes.');
+            return;
+        }
+
+        if (action === 'delete')
+        {
+            const index = projects.findIndex((p) => p.id === id);
+            if (index === -1)
+            {
+                showMessage('No project found with that id to delete.');
+                return;
+            }
+
+            projects.splice(index, 1);
+            saveLocalProjects(projects);
+
+            form.reset();
+
+            const createRadio = form.querySelector('input[name="crud-action"][value="create"]');
+            if (createRadio)
+            {
+                createRadio.checked = true;
+            }
+
+            showMessage('Project deleted. Visit the Play page and click "Load Local" to confirm.');
+        }
+    });
+}
+
+
 function setupViewTransions() {
     // No API? Don't try to transition stuff
     if (!document.startViewTransition) return;
@@ -690,6 +873,7 @@ function setupViewTransions() {
             // Re-initialize JS behaviors for the new content
             setupContactFormJS();
             setupProjectsPage();
+            setupCrudPage();
         });
     });
 
