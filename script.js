@@ -45,6 +45,55 @@ const PROJECT_CARDS_DATA = [
 ];
 
 
+// Helper to get current projects from localStorage, falling back to defaults
+function getLocalProject()
+{
+    const stored = localStorage.getItem(LOCAL_PROJECTS_KEY);
+
+    if (!stored)
+    {
+        try
+        {
+            localStorage.setItem(LOCAL_PROJECTS_KEY, JSON.stringify(PROJECT_CARDS_DATA));
+        }
+        catch (error)
+        {
+            console.error('Error seeding localStorage from defaults: ', error);
+        }
+
+        //return a shallow copy so callers do not mutate the og key
+        return PROJECT_CARDS_DATA.slice();
+    }
+
+    try
+    {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed))
+        {
+            return parsed;
+        }
+    }
+    catch (error)
+    {
+        console.error('Error parsing local projects from storage:', error);
+    }
+
+    return [];
+}
+
+// Helper to save projects array back to localStorage
+function saveLocalProjects(projects)
+{
+    try
+    {
+        localStorage.setItem(LOCAL_PROJECTS_KEY, JSON.stringify(projects));
+    }
+    catch (error)
+    {
+        console.error('Error saving projects to localStorage:', error);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     setupThemeToggle();
     setupViewTransions();
